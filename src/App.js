@@ -1,3 +1,4 @@
+@'
 import React, { useState, useEffect } from "react";
 import { QUESTIONS, UNIT_META } from "./data/questions";
 import QuizHeader from "./components/QuizHeader";
@@ -90,7 +91,7 @@ export default function Quiz() {
           </button>
           
           <div className="welcome-footer">
-            <p>✨ Học tiếng Anh cùng Lughx Project ✨</p>
+            <p>✨ Lughx Project X THAI NHAT MINH ✨</p>
           </div>
         </div>
       </div>
@@ -149,9 +150,11 @@ export default function Quiz() {
         onPick={pick}
         onNext={next}
         isLast={idx + 1 >= total}
+        currentIndex={idx}
       />
 
       <ProgressDots current={idx} total={total} />
     </div>
   );
 }
+'@ | Out-File -Encoding utf8 src\App.js
