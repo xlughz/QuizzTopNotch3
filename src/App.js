@@ -1,13 +1,22 @@
 ﻿import React, { useState, useEffect } from "react";
 import { QUESTIONS, UNIT_META } from "./data/questions";
-import QuizHeader from "./components/QuizHeader";
-import ProgressBar from "./components/ProgressBar";
 import QuestionCard from "./components/QuestionCard";
 import ResultScreen from "./components/ResultScreen";
 import ProgressDots from "./components/ProgressDots";
 import "./App.css";
 
+// Hàm xáo trộn mảng (Fisher-Yates shuffle)
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export default function Quiz() {
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
@@ -17,11 +26,20 @@ export default function Quiz() {
   const [best, setBest] = useState(0);
   const [slide, setSlide] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [shuffleSeed, setShuffleSeed] = useState(0); // Dùng để random lại
 
-  const q = QUESTIONS[idx];
+  // Xáo trộn câu hỏi khi component mount hoặc khi muốn random lại
+  useEffect(() => {
+    if (QUESTIONS.length > 0) {
+      const shuffled = shuffleArray(QUESTIONS);
+      setShuffledQuestions(shuffled);
+    }
+  }, [shuffleSeed]);
+
+  const q = shuffledQuestions[idx];
   const meta = UNIT_META[q?.unit] || UNIT_META["Mixed"];
-  const total = QUESTIONS.length;
-  const progress = (idx / total) * 100;
+  const total = shuffledQuestions.length;
+  const progress = total > 0 ? (idx / total) * 100 : 0;
 
   useEffect(() => {
     setSlide(true);
@@ -30,7 +48,7 @@ export default function Quiz() {
   }, [idx]);
 
   const pick = (i) => {
-    if (selected !== null) return;
+    if (selected !== null || !q) return;
     setSelected(i);
     const ok = i === q.ans;
     if (ok) setScore(s => s + 1);
@@ -53,12 +71,15 @@ export default function Quiz() {
   const restart = () => {
     setIdx(0); setSelected(null); setScore(0);
     setAnswers([]); setDone(false); setStreak(0);
+    // Xáo trộn lại câu hỏi khi chơi lại
+    setShuffleSeed(prev => prev + 1);
   };
 
   const startQuiz = () => {
     setShowWelcome(false);
   };
 
+  // Welcome Screen
   if (showWelcome) {
     return (
       <div className="welcome-screen">
@@ -70,7 +91,7 @@ export default function Quiz() {
           </div>
           <div className="welcome-stats">
             <div className="stat-item">
-              <span className="stat-number">200</span>
+              <span className="stat-number">{total}</span>
               <span className="stat-label">Câu hỏi</span>
             </div>
             <div className="stat-item">
@@ -78,22 +99,22 @@ export default function Quiz() {
               <span className="stat-label">Units</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">⚡</span>
-              <span className="stat-label">Kahoot Style</span>
+              <span className="stat-number">🎲</span>
+              <span className="stat-label">Random Mode</span>
             </div>
           </div>
           <button className="start-btn" onClick={startQuiz}>
             🚀 BẮT ĐẦU NGAY
           </button>
           <div className="welcome-footer">
-            <p>Lughx Project X THAI NHAT MINH </p>
+            <p>✨ Câu hỏi được xáo trộn ngẫu nhiên mỗi lần chơi ✨</p>
           </div>
         </div>
       </div>
     );
   }
 
-  if (done) {
+  if (done || !q) {
     return <ResultScreen 
       score={score} 
       total={total} 
@@ -108,7 +129,7 @@ export default function Quiz() {
       <div className="kahoot-header">
         <div className="header-left">
           <div className="game-logo">🎮 Lughx Quiz</div>
-          <div className="game-badge">Top Notch 3</div>
+          <div className="game-badge">Random Mode</div>
         </div>
         <div className="header-right">
           <div className="score-board">

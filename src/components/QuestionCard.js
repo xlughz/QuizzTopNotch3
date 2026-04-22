@@ -5,6 +5,10 @@ import ExplanationPanel from "./ExplanationPanel";
 export default function QuestionCard({ q, meta, selected, slide, onPick, onNext, isLast, currentIndex }) {
   const optLetters = ["🟥 A", "🟦 B", "🟩 C", "🟨 D"];
 
+  // Lấy đáp án đúng và đáp án đã chọn
+  const correctAnswer = selected !== null ? q.opts[q.ans] : null;
+  const selectedAnswer = selected !== null ? q.opts[selected] : null;
+
   return (
     <div className={`question-card ${slide ? 'slide-out' : 'slide-in'}`}>
       <div className="question-box" style={{ background: meta.color }}>
@@ -39,6 +43,8 @@ export default function QuestionCard({ q, meta, selected, slide, onPick, onNext,
           isCorrect={selected === q.ans}
           exp={q.exp}
           detail={q.detail}
+          correctAnswer={correctAnswer}
+          selectedAnswer={selectedAnswer}
         />
       )}
 

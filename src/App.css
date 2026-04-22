@@ -1,59 +1,444 @@
-@'
-import React from "react";
-import OptionButton from "./OptionButton";
-import ExplanationPanel from "./ExplanationPanel";
+﻿/* ========== KAHOOT + QUIZIZZ STYLE ========== */
 
-export default function QuestionCard({ q, meta, selected, slide, onPick, onNext, isLast, currentIndex }) {
-  const optLetters = ["🟥 A", "🟦 B", "🟩 C", "🟨 D"];
-
-  return (
-    <div className={`question-card ${slide ? 'slide-out' : 'slide-in'}`}>
-      {/* Question Box Kahoot Style */}
-      <div className="question-box" style={{ background: meta.color }}>
-        <div className="question-topic">
-          <span className="topic-badge">{q.unit}</span>
-          <span className="topic-name">{q.topic}</span>
-        </div>
-        <div className="question-text">
-          <span className="question-number">Q{currentIndex + 1}</span>
-          {q.q}
-        </div>
-      </div>
-
-      {/* Options Grid Kahoot Style */}
-      <div className="options-grid">
-        {q.opts.map((opt, i) => (
-          <OptionButton
-            key={i}
-            opt={opt}
-            index={i}
-            letter={optLetters[i]}
-            selected={selected}
-            isCorrect={i === q.ans}
-            isChosen={i === selected}
-            meta={meta}
-            onPick={onPick}
-          />
-        ))}
-      </div>
-
-      {/* Explanation Panel */}
-      {selected !== null && (
-        <ExplanationPanel
-          isCorrect={selected === q.ans}
-          exp={q.exp}
-          detail={q.detail}
-        />
-      )}
-
-      {/* Next Button */}
-      {selected !== null && (
-        <button className="next-btn" onClick={onNext}>
-          {isLast ? "🏆 XEM KẾT QUẢ" : "➡ CÂU TIẾP THEO"}
-          <span className="btn-icon">→</span>
-        </button>
-      )}
-    </div>
-  );
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-'@ | Out-File -Encoding utf8 src\components\QuestionCard.js
+
+body {
+  font-family: 'Poppins', 'Segoe UI', 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========== WELCOME SCREEN ========== */
+.welcome-screen {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-screen::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.welcome-container {
+  text-align: center;
+  z-index: 2;
+  animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.welcome-logo {
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  font-size: 80px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.welcome-title {
+  font-size: 48px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #FFD700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 20px 0 10px;
+  text-shadow: 0 0 30px rgba(0,0,0,0.3);
+}
+
+.welcome-subtitle {
+  font-size: 24px;
+  color: #FFD700;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+.welcome-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 50px 0;
+}
+
+.stat-item {
+  text-align: center;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  padding: 20px 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.stat-number {
+  display: block;
+  font-size: 36px;
+  font-weight: 800;
+  color: #FFD700;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: white;
+  margin-top: 5px;
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border: none;
+  padding: 18px 50px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1a2e;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  margin-bottom: 40px;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+.welcome-footer {
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+}
+
+/* ========== QUIZ CONTAINER ========== */
+.quiz-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+/* ========== KAHOOT HEADER ========== */
+.kahoot-header {
+  max-width: 800px;
+  margin: 0 auto 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  padding: 12px 24px;
+  border-radius: 60px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.game-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #FFD700;
+  background: rgba(0,0,0,0.3);
+  padding: 6px 16px;
+  border-radius: 30px;
+}
+
+.game-badge {
+  background: #FF5722;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.header-right {
+  display: flex;
+  gap: 15px;
+}
+
+.score-board, .streak-board {
+  background: rgba(0,0,0,0.3);
+  padding: 6px 16px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score-icon, .streak-icon {
+  font-size: 18px;
+}
+
+.score-value, .streak-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #FFD700;
+}
+
+/* ========== KAHOOT PROGRESS ========== */
+.kahoot-progress {
+  max-width: 800px;
+  margin: 0 auto 20px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 30px;
+  padding: 4px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  border-radius: 30px;
+  transition: width 0.5s ease;
+  animation: pulse 1s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ========== QUESTION CARD ========== */
+.question-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.question-box {
+  background: white;
+  border-radius: 30px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.question-topic {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.topic-badge {
+  background: rgba(0,0,0,0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.topic-name {
+  font-size: 12px;
+  color: rgba(0,0,0,0.6);
+}
+
+.question-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.4;
+}
+
+.question-number {
+  display: inline-block;
+  background: #FFD700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  margin-right: 15px;
+}
+
+/* ========== OPTIONS GRID ========== */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.option-btn {
+  background: white;
+  border: none;
+  border-left: 8px solid;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.option-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.option-btn.correct {
+  background: #4CAF50;
+  color: white;
+  animation: correctPulse 0.5s ease;
+}
+
+.option-btn.wrong {
+  background: #f44336;
+  color: white;
+  animation: shake 0.5s ease;
+}
+
+.option-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@keyframes correctPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.option-letter {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+  color: white;
+}
+
+.option-text {
+  flex: 1;
+  text-align: left;
+}
+
+.option-icon {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+/* ========== NEXT BUTTON ========== */
+.next-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border: none;
+  padding: 18px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a2e;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.next-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .welcome-title {
+    font-size: 32px;
+  }
+  
+  .welcome-subtitle {
+    font-size: 18px;
+  }
+  
+  .welcome-stats {
+    gap: 20px;
+  }
+  
+  .stat-item {
+    padding: 12px 20px;
+  }
+  
+  .stat-number {
+    font-size: 24px;
+  }
+  
+  .start-btn {
+    font-size: 18px;
+    padding: 14px 30px;
+  }
+  
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .question-text {
+    font-size: 18px;
+  }
+  
+  .option-letter {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
