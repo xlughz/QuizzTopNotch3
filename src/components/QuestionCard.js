@@ -1,25 +1,23 @@
-import React from "react";
+﻿import React from "react";
 import OptionButton from "./OptionButton";
 import ExplanationPanel from "./ExplanationPanel";
 
-export default function QuestionCard({ q, meta, selected, slide, onPick, onNext, isLast }) {
+export default function QuestionCard({ q, meta, selected, slide, onPick, onNext, isLast, currentIndex }) {
   const optLetters = ["🟥 A", "🟦 B", "🟩 C", "🟨 D"];
 
   return (
     <div className={`question-card ${slide ? 'slide-out' : 'slide-in'}`}>
-      {/* Question Box Kahoot Style */}
       <div className="question-box" style={{ background: meta.color }}>
         <div className="question-topic">
           <span className="topic-badge">{q.unit}</span>
           <span className="topic-name">{q.topic}</span>
         </div>
         <div className="question-text">
-          <span className="question-number">Q{idx+1}</span>
+          <span className="question-number">Q{currentIndex + 1}</span>
           {q.q}
         </div>
       </div>
 
-      {/* Options Grid Kahoot Style */}
       <div className="options-grid">
         {q.opts.map((opt, i) => (
           <OptionButton
@@ -36,7 +34,6 @@ export default function QuestionCard({ q, meta, selected, slide, onPick, onNext,
         ))}
       </div>
 
-      {/* Explanation Panel */}
       {selected !== null && (
         <ExplanationPanel
           isCorrect={selected === q.ans}
@@ -45,11 +42,9 @@ export default function QuestionCard({ q, meta, selected, slide, onPick, onNext,
         />
       )}
 
-      {/* Next Button */}
       {selected !== null && (
         <button className="next-btn" onClick={onNext}>
           {isLast ? "🏆 XEM KẾT QUẢ" : "➡ CÂU TIẾP THEO"}
-          <span className="btn-icon">→</span>
         </button>
       )}
     </div>

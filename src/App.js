@@ -1,5 +1,4 @@
-@'
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { QUESTIONS, UNIT_META } from "./data/questions";
 import QuizHeader from "./components/QuizHeader";
 import ProgressBar from "./components/ProgressBar";
@@ -60,7 +59,6 @@ export default function Quiz() {
     setShowWelcome(false);
   };
 
-  // Welcome Screen
   if (showWelcome) {
     return (
       <div className="welcome-screen">
@@ -70,7 +68,6 @@ export default function Quiz() {
             <h1 className="welcome-title">Welcome to Lughx Project</h1>
             <h2 className="welcome-subtitle">Thái Nhật Minh</h2>
           </div>
-          
           <div className="welcome-stats">
             <div className="stat-item">
               <span className="stat-number">200</span>
@@ -85,13 +82,11 @@ export default function Quiz() {
               <span className="stat-label">Kahoot Style</span>
             </div>
           </div>
-
           <button className="start-btn" onClick={startQuiz}>
             🚀 BẮT ĐẦU NGAY
           </button>
-          
           <div className="welcome-footer">
-            <p>✨ Lughx Project X THAI NHAT MINH ✨</p>
+            <p>Lughx Project X THAI NHAT MINH </p>
           </div>
         </div>
       </div>
@@ -110,7 +105,6 @@ export default function Quiz() {
 
   return (
     <div className="quiz-container">
-      {/* Header với hiệu ứng Kahoot */}
       <div className="kahoot-header">
         <div className="header-left">
           <div className="game-logo">🎮 Lughx Quiz</div>
@@ -130,7 +124,6 @@ export default function Quiz() {
         </div>
       </div>
 
-      {/* Progress với hiệu ứng Kahoot */}
       <div className="kahoot-progress">
         <div className="progress-info">
           <span>Câu {idx + 1} / {total}</span>
@@ -141,7 +134,6 @@ export default function Quiz() {
         </div>
       </div>
 
-      {/* Question Card Kahoot Style */}
       <QuestionCard
         q={q}
         meta={meta}
@@ -157,4 +149,3 @@ export default function Quiz() {
     </div>
   );
 }
-'@ | Out-File -Encoding utf8 src\App.js
