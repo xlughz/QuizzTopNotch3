@@ -1,10 +1,13 @@
 {
   "files": {
-    "main.js": "/QuizzTopNotch3/static/js/main.863e0fb2.js",
+    "main.css": "/QuizzTopNotch3/static/css/main.5687f934.css",
+    "main.js": "/QuizzTopNotch3/static/js/main.864f0e7a.js",
     "index.html": "/QuizzTopNotch3/index.html",
-    "main.863e0fb2.js.map": "/QuizzTopNotch3/static/js/main.863e0fb2.js.map"
+    "main.5687f934.css.map": "/QuizzTopNotch3/static/css/main.5687f934.css.map",
+    "main.864f0e7a.js.map": "/QuizzTopNotch3/static/js/main.864f0e7a.js.map"
   },
   "entrypoints": [
-    "static/js/main.863e0fb2.js"
+    "static/css/main.5687f934.css",
+    "static/js/main.864f0e7a.js"
   ]
 }
